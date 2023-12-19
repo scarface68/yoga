@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import api from "../api/axios";
 
 const Form = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -41,17 +42,32 @@ const Form = () => {
     setSelectedBatch("");
   };
 
-  const handleSubmit = (e) => {
+const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const Age = age(dob);
     if (Age < 18 || Age > 65) {
-      setShowModal(true);
-      return;
+        setShowModal(true);
+        return;
     }
+
+    // Make POST request
+    api.post("/enroll", {
+        name: name,
+        email: email,
+        dob: dob,
+        selectedBatch: selectedBatch
+    })
+        .then((response) => {
+            console.log("Enrollment successful");
+        })
+        .catch((error) => {
+            console.error("Enrollment failed:", error);
+        });
+
     // Reset form values
     resetForm();
-  };
+};
 
   return (
     <>
