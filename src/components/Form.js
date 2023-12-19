@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../api/axios";
 
-const Form = () => {
+const Form = ({ setUserRegistered }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
@@ -42,32 +42,33 @@ const Form = () => {
     setSelectedBatch("");
   };
 
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const Age = age(dob);
     if (Age < 18 || Age > 65) {
-        setShowModal(true);
-        return;
+      setShowModal(true);
+      return;
     }
 
     // Make POST request
-    api.post("/enroll", {
+    api
+      .post("/enroll", {
         name: name,
         email: email,
         dob: dob,
-        selectedBatch: selectedBatch
-    })
-        .then((response) => {
-            console.log("Enrollment successful");
-        })
-        .catch((error) => {
-            console.error("Enrollment failed:", error);
-        });
-
+        selectedBatch: selectedBatch,
+      })
+      .then((response) => {
+        console.log("Enrollment successful");
+      })
+      .catch((error) => {
+        console.error("Enrollment failed:", error);
+      });
+    setUserRegistered(true);
     // Reset form values
     resetForm();
-};
+  };
 
   return (
     <>
@@ -79,7 +80,7 @@ const handleSubmit = (e) => {
               monthly classes
             </p>
             <button
-              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="mt-4 bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               onClick={() => {
                 setShowModal(false);
                 resetForm();
@@ -168,7 +169,7 @@ const handleSubmit = (e) => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Submit
